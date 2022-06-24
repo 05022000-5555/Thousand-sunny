@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="../reset.css">
+    <link rel="stylesheet" href="style.css">
+    <link href='https://unpkg.com/boxicons@2.1.2/css/boxicons.min.css' rel='stylesheet'>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@100;300;500;700&display=swap" 
+    rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.1/css/all.min.css" integrity="sha512-KfkfwYDsLkIlwQp6LFnl8zNdLGxu9YAA1QvwINks4PhcElQSvqcyVLLD9aMhXd13uQjoXtEKNosOWaZqXgel0g==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <title>Form validator</title>
+</head>
+<body>
+   <div class="register">
+    <h1>Register</h1>
+        <form action="">
+            <div class="control ">
+                <input class="username" type="text" placeholder="User name">
+                <span></span>
+                <small></small>
+            </div>
+            
+            <div class="control">
+                <input class="email" type="email" placeholder="Email">
+                <span></span>
+                <small></small>
+            </div>
+
+            <div class="control">
+                <input class="password" type="password" placeholder="Password">
+                <span></span>
+                <small></small>
+            </div>
+
+            <div class="control">
+                <input class="password2" type="password" placeholder="Confirm password">
+                <span></span>
+                <small></small>
+            </div>
+            <button type="submit">Login</button>
+            </form>
+   </div>
+</body>
+<script>
+    const userName = document.querySelector(".username")
+    const email = document.querySelector(".email")
+    const password = document.querySelector(".password")
+    const password2 = document.querySelector(".password2")
+    const form = document.querySelector("form")
+
+    function error(input, message){
+        const control = input.parentNode
+        const small = control.querySelector("small")
+        control.classList.add("error")
+        control.classList.remove("success")
+        small.textContent = message
+    }
+    function success(input){
+        const control = input.parentNode
+        control.classList.add("success")
+        const small = control.querySelector("small")
+        small.textContent = ''
+    }
+    function getFileName(input){
+        return input.className.charAt(0).toUpperCase() + input.className.slice(1)
+    }
+    function checkEmpty(arr){
+        arr.forEach(element => {
+           if(element.value === ''){
+            error(element, `Khong duoc de trong ${getFileName(element)}`)
+           } else{
+            success(element)
+           }    
+        });
+    }
+    function checkEmail(input){
+        const regex = /^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/
+        if(regex.test(input.value)){
+            success(input)
+        } else{
+            error(input, "Nhap dung email")
+        }
+    }
+    function checkLength(input, min, max){
+        const valueLength = input.value.trim().length
+        console.log(valueLength)
+        if(valueLength < min){
+            error(input, `${getFileName(input)} toi thieu ${min} ki tu`)
+        } else if(valueLength > max){
+            error(input, `Khong duoc nhap qua ${max} ki tu`)
+        } else {
+            success(input)
+        }
+    }
+    function checkMatchPassword(input1, input2){
+        let p1 = input1.value.trim()
+        let p2 = input2.value.trim()
+        if(p1 !== p2){
+            error(input2, "Vui long nhap dung voi mat khau truoc do")
+        }
+        else{
+            success(input2)
+        }
+    }
+    form.addEventListener("submit", (e)=>{
+        e.preventDefault()
+        checkEmpty([userName, email, password])
+        checkEmail(email)
+        checkLength(userName, 3, 10)
+        checkLength(password, 3, 10)
+        checkMatchPassword(password, password2)
+    })
+
+</script>
+</html>
